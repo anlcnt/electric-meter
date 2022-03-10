@@ -1,11 +1,11 @@
 import sys
 from os.path import exists
+from os import environ
 import paho.mqtt.client as mqtt
 from time import sleep
 from random import uniform
 from configparser import ConfigParser
 
-DEFAULT_PATH = 'config.ini'
 SECS_PER_MOUTH = 2592000
 WAITING_CONFIG = 3
 
@@ -75,7 +75,7 @@ def sect_to_dict(section):
 
 
 # eject configuration and creating mqtt client
-def setup(path_to_cfg=DEFAULT_PATH):
+def setup(path_to_cfg):
     cfg = ConfigParser()
     while not cfg.read(path_to_cfg):
         print('Waiting configuration')
@@ -114,9 +114,7 @@ if __name__ == '__main__':
     # greetings message
     print(greetings())
 
-    path = DEFAULT_PATH
-    if len(sys.argv) > 1:
-        path = sys.argv[1]
+    path = environ.get("CONFIGURATION", default="config.ini")
 
     sys_cfg, electricity, mqttc = setup(path)
 
